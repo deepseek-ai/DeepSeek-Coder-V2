@@ -178,7 +178,7 @@ Evaluation results on the ``Needle In A Haystack`` (NIAH) tests.  DeepSeek-Coder
 You can chat with the DeepSeek-Coder-V2 on DeepSeek's official website: [coder.deepseek.com](https://coder.deepseek.com/sign_in)
 
 ## 5. API Platform
-We also provide OpenAI-Compatible API at DeepSeek Platform: [platform.deepseek.com](https://platform.deepseek.com/). Sign up for over millions of free tokens. And you can also pay-as-you-go at an unbeatable price.
+We also provide OpenAI-Compatible API at DeepSeek Platform: [platform.deepseek.com](https://platform.deepseek.com/), and you can also pay-as-you-go at an unbeatable price.
 
 <p align="center">
   <img width="40%" src="figures/model_price.jpg">
