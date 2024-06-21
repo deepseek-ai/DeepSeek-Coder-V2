@@ -49,7 +49,7 @@
 
 
 <p align="center">
-  <a href="https://github.com/deepseek-ai/DeepSeek-Coder-V2/blob/main/paper.pdf"><b>Paper Link</b>👁️</a>
+  <a href="https://arxiv.org/pdf/2406.11931"><b>Paper Link</b>👁️</a>
 </p>
 
 
@@ -303,11 +303,11 @@ This code repository is licensed under [the MIT License](LICENSE-CODE). The use 
 
 ## 8. Citation
 ```latex
-@article{deepseek-coder-v2,
-  author={Qihao Zhu and Daya Guo and Zhihong Shao and Dejian Yang and Peiyi Wang and Runxin Xu and Y. Wu and Yukun Li and Huazuo Gao and Shirong Ma and Wangding Zeng and Xiao Bi and Zihui Gu and Hanwei Xu and Damai Dai and Kai Dong and Liyue Zhang and Yishi Piao and Zhibin Gou and Zhenda Xie and Zhewen Hao and Bingxuan Wang and Junxiao Song and Deli Chen and Xin Xie and Kang Guan and Yuxiang You and Aixin Liu and Qiushi Du and Wenjun Gao and Xuan Lu and Qinyu Chen and Yaohui Wang and Chengqi Deng and Jiashi Li and Chenggang Zhao and Chong Ruan and Fuli Luo and Wenfeng Liang},
+@article{zhu2024deepseek,
   title={DeepSeek-Coder-V2: Breaking the Barrier of Closed-Source Models in Code Intelligence},
-  year={2024},
-  url={https://github.com/deepseek-ai/DeepSeek-Coder-V2/blob/main/paper.pdf}
+  author={Zhu, Qihao and Guo, Daya and Shao, Zhihong and Yang, Dejian and Wang, Peiyi and Xu, Runxin and Wu, Y and Li, Yukun and Gao, Huazuo and Ma, Shirong and others},
+  journal={arXiv preprint arXiv:2406.11931},
+  year={2024}
 }
 ```
 
