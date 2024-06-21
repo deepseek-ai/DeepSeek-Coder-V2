@@ -268,6 +268,13 @@ Assistant: {assistant_message_1}<｜end▁of▁sentence｜>User: {user_message_2
 Assistant:
 ```
 
+In the last round of dialogue, note that "Assistant:" has no space after the colon. Adding a space might cause the following issues on the 16B-Lite model:
+- English questions receiving Chinese responses.
+- Responses containing garbled text.
+- Responses repeating excessively.
+
+Older versions of Ollama had this bug (see https://github.com/deepseek-ai/DeepSeek-Coder-V2/issues/12), but it has been fixed in the latest version.
+
 ### Inference with vLLM (recommended)
 To utilize [vLLM](https://github.com/vllm-project/vllm) for model inference, please merge this Pull Request into your vLLM codebase: https://github.com/vllm-project/vllm/pull/4650.
 
