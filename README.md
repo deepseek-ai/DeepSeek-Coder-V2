@@ -275,6 +275,42 @@ In the last round of dialogue, note that "Assistant:" has no space after the col
 
 Older versions of Ollama had this bug (see https://github.com/deepseek-ai/DeepSeek-Coder-V2/issues/12), but it has been fixed in the latest version.
 
+
+### Inference with SGLang (recommended)
+[SGLang](https://github.com/sgl-project/sglang) currently supports MLA optimizations, FP8 (W8A8), FP8 KV Cache, and Torch Compile, offering the best latency and throughput among open-source frameworks. Here are some example commands to launch an OpenAI API-compatible server:
+
+```bash
+# BF16, tensor parallelism = 8
+python3 -m sglang.launch_server --model deepseek-ai/DeepSeek-Coder-V2-Instruct --tp 8 --trust-remote-code
+
+# BF16, w/ torch.compile (The compilation can take several minutes)
+python3 -m sglang.launch_server --model deepseek-ai/DeepSeek-Coder-V2-Lite-Instruct --trust-remote-code --enable-torch-compile
+
+# FP8, tensor parallelism = 8, FP8 KV cache
+python3 -m sglang.launch_server --model neuralmagic/DeepSeek-Coder-V2-Instruct-FP8 --tp 8 --trust-remote-code --kv-cache-dtype fp8_e5m2
+```
+
+After launching the server, you can query it with OpenAI API
+
+```
+import openai
+client = openai.Client(
+    base_url="http://127.0.0.1:30000/v1", api_key="EMPTY")
+
+# Chat completion
+response = client.chat.completions.create(
+    model="default",
+    messages=[
+        {"role": "system", "content": "You are a helpful AI assistant"},
+        {"role": "user", "content": "List 3 countries and their capitals."},
+    ],
+    temperature=0,
+    max_tokens=64,
+)
+print(response)
+```
+
+
 ### Inference with vLLM (recommended)
 To utilize [vLLM](https://github.com/vllm-project/vllm) for model inference, please merge this Pull Request into your vLLM codebase: https://github.com/vllm-project/vllm/pull/4650.
 
