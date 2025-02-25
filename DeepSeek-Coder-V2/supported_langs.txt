@@ -1,0 +1,338 @@
+ABAP
+AGS Script
+AMD GPU
+AMPL
+ANSYS Parametric Design Language
+ANTLR
+APL
+ASP
+AWK
+ActionScript
+Ada
+Agda
+Alloy
+AmbientTalk
+Apache Configuration
+AppleScript
+Arc
+Arduino
+AspectJ
+Assembly
+Asymptote
+Augeas
+AutoHotkey
+AutoIt
+BC
+BNF
+BST
+Berry
+BitBake
+BlitzBasic
+BlitzMax
+Bluespec
+Boo
+Boogie
+Brainfuck
+BrightScript
+Bro
+C
+C#
+C++
+C2HS Haskell
+CADL
+CMake
+COBOL
+COBOLFree
+CSS
+CUDA
+CapDL
+Ceylon
+Chapel
+ChucK
+Cirru
+Click
+Clojure
+CoffeeScript
+ColdFusion CFC
+Common Lisp
+Crystal
+Csound
+Csound Score
+Cypher
+Cython
+DASM16
+DM
+Darcs Patch
+Dart
+Debian Control File
+DeviceTree
+Diff
+Docker
+Dockerfile
+Dylan
+EBNF
+ELPi
+Eiffel
+Elixir
+Elm
+Emacs Lisp
+EmberScript
+Erlang
+Execline
+F#
+F*
+Factor
+Fancy
+Fantom
+Felix
+Fennel
+Fish
+Flux
+Fortran
+Fortran Fixed Form
+FoxPro
+FreeFem
+FreeMarker
+Futhark
+G-Code
+GAP
+GAS
+GDScript
+GLSL
+GSQL
+Genshi
+Gentoo Ebuild
+Gentoo Eclass
+Gettext Catalog
+Glyph
+Gnuplot
+Go
+Gosu
+Grace
+Gradle
+Grammatical Framework
+GraphQL
+Graphviz DOT
+Groff
+Groovy
+Groovy Server Pages
+HCL
+HLSL
+HTML
+HTML Django
+HTML ERB
+HTML PHP
+HTTP
+Handlebars
+Haskell
+Haxe
+Hy
+IGOR Pro
+Idris
+Inform 6 Template
+Inno Setup
+Io
+Isabelle
+J
+JAGS
+JCL
+JFlex
+JSON
+JSONiq
+JSX
+Jade
+Jasmin
+Java
+Java Server Pages
+JavaScript
+JavaScript MozPreproc
+Julia
+Jupyter Notebook
+K
+KRL
+Kconfig
+Koka
+Kotlin
+LFE
+LLVM
+LSL
+Lean
+Less
+Lex
+Lighttpd Configuration File
+LilyPond
+Limbo
+Linker Script
+Liquid
+Literate Agda
+Literate CoffeeScript
+Logtalk
+Lua
+M4
+MATLAB
+MQL
+MUF
+Makefile
+Mako
+Mason
+Maxima
+Meson
+Metal
+MiniScript
+Mirah
+Mizar
+Modelica
+Modula-2
+Monkey
+MooCode
+MoonScript
+Mosel
+MuPAD
+NASM
+NCL
+NSIS
+NetLinx
+Nginx Configuration File
+Nimrod
+Ninja
+Nit
+Nix
+Nu
+NuSMV
+OCaml
+OMG Interface Definition Language
+Objdump
+Objective-C
+Objective-C++
+Octave
+Odin
+Opa
+OpenCL
+OpenEdge ABL
+OpenSCAD
+Ox
+Oz
+PAWN
+PEG
+PHP
+POD
+POV-Ray
+Papyrus
+Parrot Internal Representation
+Pascal
+Perl
+Perl 6
+Pike
+PkgConfig
+Pony
+PowerShell
+Praat
+Processing
+Propeller Spin
+Protocol Buffer
+Pug
+Puppet
+PureBasic
+PureScript
+Python
+Q
+QML
+QVTO
+R
+RAML
+RConsole
+REALbasic
+REXX
+RHTML
+Racket
+Ragel in Ruby Host
+Rd
+ReasonML
+Red
+Ren'Py
+RenderScript
+Ride
+Robot Framework
+Rouge
+Ruby
+Rust
+S
+SARL
+SAS
+SCSS
+SMT
+SPARQL
+SQF
+SQL
+SWIG
+Sage
+Sass
+Scala
+Scheme
+Scilab
+Self
+ShExC
+Shell
+Sieve
+Silver
+Singularity
+Slim
+Smali
+Smarty
+Smithy
+Solidity
+SourcePawn
+Squirrel
+Stan
+Standard ML
+Stata
+Stylus
+SuperCollider
+Swift
+SystemVerilog
+Tcl
+Tcsh
+TeX
+Tea
+Terminfo
+Thrift
+Transact-SQL
+Treetop
+Turing
+Twig
+TypeScript
+TypoScript
+USD
+Unity3D Asset
+Uno
+UnrealScript
+UrWeb
+VBScript
+VCL
+VHDL
+Vala
+Velocity
+Verilog
+VimL
+Visual Basic
+Vue
+Web IDL
+WebAssembly
+Whiley
+X10
+XBase
+XC
+XML
+XML Lasso
+XQuery
+XS
+XSLT
+Xtend
+Xtlang
+YANG
+Zeek
+Zephir
+Zig
+Zimpl
+eC
+ooc
