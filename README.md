@@ -188,6 +188,14 @@ We also provide OpenAI-Compatible API at DeepSeek Platform: [platform.deepseek.c
 ## 6. How to run locally
 **Here, we provide some examples of how to use DeepSeek-Coder-V2-Lite model. If you want to utilize DeepSeek-Coder-V2 in BF16 format for inference, 80GB*8 GPUs are required.**
 
+### Quantization Guide
+For efficient inference with reduced memory usage, see our comprehensive [Quantization Guide](QUANTIZATION_GUIDE.md) which covers:
+- vLLM quantization support
+- SGLang FP8 optimization  
+- llama.cpp GGUF conversion
+- AutoGPTQ integration
+- Performance comparisons and troubleshooting
+
 ### Inference with Huggingface's Transformers
 You can directly employ [Huggingface's Transformers](https://github.com/huggingface/transformers) for model inference.
 
