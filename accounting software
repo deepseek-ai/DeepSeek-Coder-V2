@@ -1,0 +1,31 @@
+CREATE TABLE accounts (
+  id TEXT PRIMARY KEY,
+  code TEXT NOT NULL,
+  name TEXT NOT NULL,
+  type TEXT NOT NULL,
+  parent_id TEXT,
+  normal_balance TEXT,
+  is_active INTEGER DEFAULT 1
+);
+
+CREATE TABLE journals (
+  id TEXT PRIMARY KEY,
+  journal_type TEXT,
+  date TEXT,
+  reference TEXT,
+  description TEXT,
+  posted INTEGER DEFAULT 0,
+  created_by TEXT
+);
+
+CREATE TABLE journal_lines (
+  id TEXT PRIMARY KEY,
+  journal_id TEXT NOT NULL,
+  account_id TEXT NOT NULL,
+  debit REAL DEFAULT 0,
+  credit REAL DEFAULT 0,
+  description TEXT,
+  job_id TEXT,
+  FOREIGN KEY (journal_id) REFERENCES journals(id),
+  FOREIGN KEY (account_id) REFERENCES accounts(id)
+);
