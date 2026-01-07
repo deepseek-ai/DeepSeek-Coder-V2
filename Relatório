@@ -1,0 +1,1349 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relatório Fotográfico Ambiental 3.1</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #006400;
+        }
+        h1, h2 {
+            color: #006400;
+        }
+        .form-section {
+            margin-bottom: 25px;
+            page-break-inside: avoid;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        input, textarea, select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        #map {
+            height: 400px;
+            width: 100%;
+            margin: 15px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .btn {
+            background-color: #006400;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .btn-secondary {
+            background-color: #6c757d;
+        }
+        .btn-danger {
+            background-color: #dc3545;
+        }
+        .coordinates {
+            display: flex;
+            gap: 15px;
+        }
+        .coord-input {
+            flex: 1;
+        }
+        .error {
+            color: red;
+            margin-top: 5px;
+        }
+        .photo-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 15px;
+            page-break-inside: avoid;
+        }
+        .photo-item {
+            flex: 1 1 300px;
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 5px;
+            position: relative;
+            page-break-inside: avoid;
+        }
+        .photo-number {
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            background-color: rgba(0, 100, 0, 0.7);
+            color: white;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-weight: bold;
+        }
+        .photo-preview {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            background-color: #f5f5f5;
+            margin-bottom: 10px;
+        }
+        .datetime-group {
+            display: flex;
+            gap: 15px;
+        }
+        .datetime-input {
+            flex: 1;
+        }
+        .dms-coordinates {
+            font-family: monospace;
+            background-color: #f5f5f5;
+            padding: 5px;
+            border-radius: 3px;
+        }
+        .map-controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        .map-type-btn {
+            padding: 5px 10px;
+            background-color: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .map-type-btn.active {
+            background-color: #006400;
+            color: white;
+        }
+        .action-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .connection-status {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            padding: 5px 10px;
+            border-radius: 4px;
+            color: white;
+            font-weight: bold;
+            z-index: 1000;
+        }
+        .online {
+            background-color: #28a745;
+        }
+        .offline {
+            background-color: #dc3545;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 15px;
+            border-top: 1px solid #ddd;
+            font-size: 0.9em;
+            color: #666;
+        }
+        .termo-item {
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            page-break-inside: avoid;
+        }
+        .auto-item {
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            page-break-inside: avoid;
+        }
+        .add-btn {
+            margin-bottom: 15px;
+        }
+        .signature-pad {
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: white;
+        }
+        .signature-clear {
+            margin-top: 10px;
+        }
+        #qrcode {
+            margin: 15px 0;
+            text-align: center;
+        }
+        #infrator-search {
+            margin-bottom: 15px;
+        }
+        #infrator-results {
+            max-height: 200px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 10px;
+            margin-bottom: 15px;
+            display: none;
+        }
+        .infrator-item {
+            padding: 8px;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+        }
+        .infrator-item:hover {
+            background-color: #f5f5f5;
+        }
+        .infrator-selected {
+            background-color: #e6f7e6;
+            border-left: 3px solid #006400;
+            padding-left: 5px;
+        }
+        @media print {
+            .no-print {
+                display: none;
+            }
+            body {
+                margin: 0;
+                padding: 0;
+            }
+            .container {
+                border: none;
+                box-shadow: none;
+                padding: 0;
+            }
+            .footer {
+                display: none;
+            }
+            .photo-item {
+                page-break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="connectionStatus" class="connection-status offline">Offline</div>
+    
+    <div class="container" id="relatorio">
+        <div class="header">
+            <h1>Relatório Fotográfico Ambiental - Versão 3.1</h1>
+            <p>Instituto Chico Mendes de Conservação da Biodiversidade - ICMBio</p>
+            <div id="qrcode"></div>
+        </div>
+        
+        <div class="form-section">
+            <h2>Dados do Relatório</h2>
+            
+            <div class="datetime-group">
+                <div class="datetime-input">
+                    <label for="data">Data:</label>
+                    <input type="date" id="data" required>
+                </div>
+                <div class="datetime-input">
+                    <label for="hora">Hora:</label>
+                    <input type="time" id="hora" required>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="local">Local da Fiscalização:</label>
+                <input type="text" id="local" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="infrator-search">Buscar Infrator:</label>
+                <input type="text" id="infrator-search" placeholder="Digite nome, CPF/CNPJ ou número de auto anterior">
+                <div id="infrator-results"></div>
+            </div>
+            
+            <div class="form-group">
+                <label for="infrator_nome">Nome do Infrator:</label>
+                <input type="text" id="infrator_nome" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="infrator_documento">CPF/CNPJ:</label>
+                <input type="text" id="infrator_documento" required>
+            </div>
+            
+            <div class="form-group">
+                <label>Coordenadas Geográficas (Graus Decimais):</label>
+                <div class="coordinates">
+                    <input type="text" id="latitude" class="coord-input" placeholder="Latitude" readonly>
+                    <input type="text" id="longitude" class="coord-input" placeholder="Longitude" readonly>
+                </div>
+                <div id="coord-error" class="error"></div>
+                <div class="form-group">
+                    <input type="checkbox" id="rastreamento" checked>
+                    <label for="rastreamento" style="display: inline;">Atualizar coordenadas automaticamente</label>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>Coordenadas em Graus, Minutos e Segundos:</label>
+                <div id="dms-coordinates" class="dms-coordinates">Não disponível</div>
+            </div>
+            
+            <div class="buttons no-print">
+                <button id="get-location" class="btn">Obter Localização Atual</button>
+                <button id="manual-coords" class="btn btn-secondary">Inserir Coordenadas Manualmente</button>
+            </div>
+            
+            <div id="map"></div>
+        </div>
+        
+        <div class="form-section">
+            <h2>Autos de Infração</h2>
+            <div id="autos-container">
+                <div class="auto-item">
+                    <div class="form-group">
+                        <label for="auto_numero_1">Número do Auto de Infração:</label>
+                        <input type="text" id="auto_numero_1" class="auto-numero" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="auto_descricao_1">Descrição da Infração:</label>
+                        <textarea id="auto_descricao_1" class="auto-descricao" rows="3" required></textarea>
+                    </div>
+                </div>
+            </div>
+            <button id="add-auto" class="btn btn-secondary add-btn no-print">Adicionar outro Auto</button>
+        </div>
+        
+        <div class="form-section">
+            <h2>Termos</h2>
+            <div id="termos-container">
+                <div class="termo-item">
+                    <div class="form-group">
+                        <label for="termo_tipo_1">Tipo de Termo:</label>
+                        <select id="termo_tipo_1" class="termo-tipo" required>
+                            <option value="">Selecione...</option>
+                            <option value="notificacao">Termo de Notificação</option>
+                            <option value="apreensao">Termo de Apreensão</option>
+                            <option value="embargo">Termo de Embargo</option>
+                            <option value="soltura">Termo de Soltura</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="termo_numero_1">Número do Termo:</label>
+                        <input type="text" id="termo_numero_1" class="termo-numero" required>
+                    </div>
+                </div>
+            </div>
+            <button id="add-termo" class="btn btn-secondary add-btn no-print">Adicionar outro Termo</button>
+        </div>
+        
+        <div class="form-section">
+            <h2>Descrição da Ação</h2>
+            <div class="form-group">
+                <label for="descricao">Descrição detalhada do que foi realizado em campo:</label>
+                <textarea id="descricao" rows="6" required></textarea>
+            </div>
+        </div>
+        
+        <div class="form-section">
+            <h2>Registro Fotográfico</h2>
+            
+            <div class="form-group no-print">
+                <label for="photo-upload">Adicionar Fotos:</label>
+                <input type="file" id="photo-upload" accept="image/*" multiple>
+                <small>Selecione uma ou mais fotos para upload</small>
+            </div>
+            
+            <div id="photo-container" class="photo-container">
+                <div class="photo-item" style="display: none;">
+                    <div class="photo-number">Figura 1</div>
+                    <img class="photo-preview" src="">
+                    <div class="form-group">
+                        <label>Legenda:</label>
+                        <input type="text" class="photo-caption" placeholder="Descreva a foto">
+                    </div>
+                    <div class="form-group">
+                        <label>Coordenadas:</label>
+                        <input type="text" class="photo-coords" readonly>
+                    </div>
+                    <button class="btn btn-secondary remove-photo no-print">Remover</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="form-section">
+            <h2>Assinatura do Fiscal</h2>
+            <div class="form-group">
+                <label for="fiscal_nome">Nome do Fiscal:</label>
+                <input type="text" id="fiscal_nome" required>
+            </div>
+            <div class="form-group">
+                <label for="fiscal_matricula">Matrícula:</label>
+                <input type="text" id="fiscal_matricula" required>
+            </div>
+            <div class="form-group">
+                <label>Assinatura:</label>
+                <canvas id="signature-pad" class="signature-pad" width="400" height="200"></canvas>
+                <button id="clear-signature" class="btn btn-secondary signature-clear no-print">Limpar Assinatura</button>
+            </div>
+        </div>
+        
+        <div class="action-buttons no-print">
+            <button id="print-report" class="btn">Imprimir Relatório</button>
+            <button id="generate-pdf" class="btn btn-secondary">Gerar PDF</button>
+            <button id="save-data" class="btn btn-secondary">Salvar Dados</button>
+            <button id="load-data" class="btn btn-secondary">Carregar Dados</button>
+        </div>
+        
+        <div class="footer">
+            <p>Todos os direitos reservados &copy; <span id="current-year"></span> - Iram Mendes Jr - Analista Ambiental - ICMBio</p>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/signature_pad/1.5.3/signature_pad.min.js"></script>
+    
+    <script>
+        // Código do Service Worker como Blob URL
+        function registerServiceWorker() {
+            if ('serviceWorker' in navigator) {
+                const swCode = `
+                    const CACHE_NAME = 'ambiental-report-v3';
+                    const OFFLINE_TILES = [
+                        '/offline-tiles/{z}/{x}/{y}.png',
+                        '/offline-page'
+                    ];
+
+                    self.addEventListener('install', (event) => {
+                        event.waitUntil(
+                            caches.open(CACHE_NAME)
+                                .then((cache) => {
+                                    return cache.addAll(OFFLINE_TILES);
+                                })
+                        );
+                    });
+
+                    self.addEventListener('fetch', (event) => {
+                        if (event.request.mode === 'navigate' || 
+                            (event.request.method === 'GET' && 
+                             event.request.headers.get('accept').includes('text/html'))) {
+                            event.respondWith(
+                                fetch(event.request)
+                                    .catch(() => {
+                                        return caches.match('/offline-page');
+                                    })
+                            );
+                        } else if (event.request.url.includes('{z}/{x}/{y}')) {
+                            event.respondWith(
+                                caches.match(event.request)
+                                    .then((response) => {
+                                        return response || fetch(event.request)
+                                            .catch(() => {
+                                                return new Response('<svg>...</svg>', {
+                                                    headers: { 'Content-Type': 'image/svg+xml' }
+                                                });
+                                            });
+                                    })
+                            );
+                        } else {
+                            event.respondWith(
+                                caches.match(event.request)
+                                    .then((response) => {
+                                        return response || fetch(event.request);
+                                    })
+                            );
+                        }
+                    });
+                `;
+
+                const blob = new Blob([swCode], { type: 'application/javascript' });
+                const swUrl = URL.createObjectURL(blob);
+
+                navigator.serviceWorker.register(swUrl)
+                    .then(registration => {
+                        console.log('ServiceWorker registration successful');
+                    })
+                    .catch(err => {
+                        console.log('ServiceWorker registration failed: ', err);
+                    });
+            }
+        }
+
+        // Variáveis globais
+        let map;
+        let marker;
+        const coordError = document.getElementById('coord-error');
+        let currentPhotos = [];
+        let baseLayers = {};
+        let currentLayer;
+        let isOnline = navigator.onLine;
+        const connectionStatus = document.getElementById('connectionStatus');
+        let autoCount = 1;
+        let termoCount = 1;
+        let photoCount = 0;
+        let signaturePad;
+        let watchPositionId = null;
+        let infratoresDB = [];
+        
+        // Inicialização
+        window.onload = function() {
+            const now = new Date();
+            document.getElementById('data').value = now.toISOString().split('T')[0];
+            document.getElementById('hora').value = now.toTimeString().substring(0, 5);
+            document.getElementById('current-year').textContent = new Date().getFullYear();
+            
+            // Inicializa o Signature Pad
+            const canvas = document.getElementById('signature-pad');
+            signaturePad = new SignaturePad(canvas);
+            
+            // Carrega banco de infratores (simulado)
+            loadInfratoresDB();
+            
+            updateConnectionStatus();
+            initMap(-15.788, -47.879);
+            registerServiceWorker();
+            generateQRCode();
+            
+            // Configura eventos de busca
+            document.getElementById('infrator-search').addEventListener('input', searchInfrator);
+        };
+
+        // Carrega banco de infratores (simulação)
+        function loadInfratoresDB() {
+            // Simulação de banco de dados
+            infratoresDB = [
+                { nome: "João da Silva", documento: "123.456.789-09", autos: ["AI-2023-001", "AI-2022-045"] },
+                { nome: "Empresa XYZ Ltda", documento: "12.345.678/0001-99", autos: ["AI-2023-078"] },
+                { nome: "Maria Oliveira", documento: "987.654.321-00", autos: ["AI-2021-123", "AI-2020-056"] }
+            ];
+        }
+        
+        // Busca infrator no banco de dados
+        function searchInfrator() {
+            const searchTerm = document.getElementById('infrator-search').value.toLowerCase();
+            const resultsContainer = document.getElementById('infrator-results');
+            
+            if (searchTerm.length < 3) {
+                resultsContainer.style.display = 'none';
+                return;
+            }
+            
+            const results = infratoresDB.filter(infrator => 
+                infrator.nome.toLowerCase().includes(searchTerm) ||
+                infrator.documento.includes(searchTerm) ||
+                infrator.autos.some(auto => auto.toLowerCase().includes(searchTerm))
+            );
+            
+            if (results.length > 0) {
+                resultsContainer.innerHTML = '';
+                results.forEach(infrator => {
+                    const div = document.createElement('div');
+                    div.className = 'infrator-item';
+                    div.innerHTML = `
+                        <strong>${infrator.nome}</strong><br>
+                        ${infrator.documento}<br>
+                        <small>Autos anteriores: ${infrator.autos.join(', ')}</small>
+                    `;
+                    div.addEventListener('click', () => selectInfrator(infrator));
+                    resultsContainer.appendChild(div);
+                });
+                resultsContainer.style.display = 'block';
+            } else {
+                resultsContainer.style.display = 'none';
+            }
+        }
+        
+        // Seleciona um infrator dos resultados
+        function selectInfrator(infrator) {
+            document.getElementById('infrator_nome').value = infrator.nome;
+            document.getElementById('infrator_documento').value = infrator.documento;
+            document.getElementById('infrator-results').style.display = 'none';
+            document.getElementById('infrator-search').value = '';
+        }
+        
+        // Gera QR Code com informações do relatório
+        function generateQRCode() {
+            const qrElement = document.getElementById('qrcode');
+            qrElement.innerHTML = '';
+            
+            // Gera um ID único para o relatório
+            const reportId = 'REL-' + Date.now();
+            
+            QRCode.toCanvas(qrElement, reportId, { width: 150 }, function(error) {
+                if (error) console.error(error);
+            });
+        }
+        
+        // Atualiza o status da conexão
+        function updateConnectionStatus() {
+            isOnline = navigator.onLine;
+            if (isOnline) {
+                connectionStatus.textContent = 'Online';
+                connectionStatus.className = 'connection-status online';
+                initMapWithOnlineLayers();
+            } else {
+                connectionStatus.textContent = 'Offline';
+                connectionStatus.className = 'connection-status offline';
+                initMapWithOfflineLayers();
+            }
+        }
+        
+        // Inicializa o mapa com camadas online
+        function initMapWithOnlineLayers(lat, lng) {
+            if (!map) {
+                const defaultLat = lat || -15.788;
+                const defaultLng = lng || -47.879;
+                initMap(defaultLat, defaultLng);
+                return;
+            }
+            
+            map.eachLayer(layer => {
+                if (layer._url && layer._url.includes('offline-tiles')) {
+                    map.removeLayer(layer);
+                }
+            });
+            
+            baseLayers["Satélite"].addTo(map);
+            currentLayer = baseLayers["Satélite"];
+        }
+        
+        // Inicializa o mapa com camadas offline
+        function initMapWithOfflineLayers(lat, lng) {
+            if (!map) {
+                const defaultLat = lat || -15.788;
+                const defaultLng = lng || -47.879;
+                initMap(defaultLat, defaultLng);
+                return;
+            }
+            
+            map.eachLayer(layer => {
+                if (layer._url && (layer._url.includes('openstreetmap') || layer._url.includes('google'))) {
+                    map.removeLayer(layer);
+                }
+            });
+            
+            try {
+                const offlineLayer = L.tileLayer('offline-tiles/{z}/{x}/{y}.png', {
+                    attribution: 'Map data offline',
+                    maxZoom: 18,
+                    minZoom: 3
+                }).addTo(map);
+                currentLayer = offlineLayer;
+            } catch (e) {
+                document.getElementById('map').innerHTML = 
+                    '<p style="text-align: center; padding-top: 180px;">Mapa offline não disponível. Conecte-se à internet para carregar mapas.</p>';
+            }
+        }
+        
+        // Inicializa o mapa
+        function initMap(lat, lng) {
+            if (map) {
+                map.setView([lat, lng], 15);
+                if (marker) {
+                    marker.setLatLng([lat, lng]);
+                }
+                return;
+            }
+            
+            map = L.map('map').setView([lat, lng], 15);
+            
+            const streetLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            });
+            
+            const satelliteLayer = L.tileLayer('https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
+                attribution: 'Imagens © Google Satellite'
+            });
+            
+            const hybridLayer = L.tileLayer('https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', {
+                attribution: 'Imagens © Google Hybrid'
+            });
+            
+            baseLayers = {
+                "Satélite": satelliteLayer,
+                "Ruas": streetLayer,
+                "Híbrido": hybridLayer
+            };
+            
+            if (isOnline) {
+                satelliteLayer.addTo(map);
+                currentLayer = satelliteLayer;
+            } else {
+                initMapWithOfflineLayers(lat, lng);
+            }
+            
+            marker = L.marker([lat, lng], {
+                draggable: true
+            }).addTo(map);
+            
+            marker.on('dragend', function() {
+                const newLatLng = marker.getLatLng();
+                updateCoordinates(newLatLng.lat, newLatLng.lng);
+            });
+            
+            map.on('click', function(e) {
+                updateCoordinates(e.latlng.lat, e.latlng.lng);
+                if (!marker) {
+                    marker = L.marker(e.latlng, {
+                        draggable: true
+                    }).addTo(map);
+                    marker.on('dragend', function() {
+                        const newLatLng = marker.getLatLng();
+                        updateCoordinates(newLatLng.lat, newLatLng.lng);
+                    });
+                } else {
+                    marker.setLatLng(e.latlng);
+                }
+            });
+        }
+        
+        // Converte graus decimais para DMS
+        function decimalToDMS(decimal, isLatitude) {
+            const absDecimal = Math.abs(decimal);
+            const degrees = Math.floor(absDecimal);
+            const minutesNotTruncated = (absDecimal - degrees) * 60;
+            const minutes = Math.floor(minutesNotTruncated);
+            const seconds = ((minutesNotTruncated - minutes) * 60).toFixed(2);
+            
+            const direction = isLatitude 
+                ? (decimal >= 0 ? 'N' : 'S') 
+                : (decimal >= 0 ? 'E' : 'W');
+            
+            return `${degrees}° ${minutes}' ${seconds}" ${direction}`;
+        }
+        
+        // Atualiza as coordenadas DMS
+        function updateDMSCoordinates(lat, lng) {
+            const latDMS = decimalToDMS(lat, true);
+            const lngDMS = decimalToDMS(lng, false);
+            document.getElementById('dms-coordinates').textContent = 
+                `Latitude: ${latDMS} | Longitude: ${lngDMS}`;
+        }
+        
+        // Atualiza os campos de coordenadas
+        function updateCoordinates(lat, lng) {
+            document.getElementById('latitude').value = lat.toFixed(6);
+            document.getElementById('longitude').value = lng.toFixed(6);
+            updateDMSCoordinates(lat, lng);
+            coordError.textContent = '';
+            
+            if (map) {
+                map.setView([lat, lng]);
+                if (marker) {
+                    marker.setLatLng([lat, lng]);
+                } else {
+                    marker = L.marker([lat, lng], {
+                        draggable: true
+                    }).addTo(map);
+                    marker.on('dragend', function() {
+                        const newLatLng = marker.getLatLng();
+                        updateCoordinates(newLatLng.lat, newLatLng.lng);
+                    });
+                }
+            }
+        }
+        
+        // Obtém a localização atual
+        function getLocation() {
+            coordError.textContent = 'Obtendo localização...';
+            
+            if (!navigator.geolocation) {
+                coordError.textContent = 'Geolocalização não é suportada pelo seu navegador';
+                return;
+            }
+            
+            // Para qualquer rastreamento anterior
+            if (watchPositionId) {
+                navigator.geolocation.clearWatch(watchPositionId);
+            }
+            
+            // Verifica se o rastreamento está ativado
+            const rastreamentoAtivo = document.getElementById('rastreamento').checked;
+            
+            if (rastreamentoAtivo) {
+                // Inicia o rastreamento contínuo
+                watchPositionId = navigator.geolocation.watchPosition(
+                    function(position) {
+                        const lat = position.coords.latitude;
+                        const lng = position.coords.longitude;
+                        updateCoordinates(lat, lng);
+                        initMap(lat, lng);
+                        coordError.textContent = 'Rastreamento ativo - coordenadas atualizadas';
+                    },
+                    function(error) {
+                        handleGeolocationError(error);
+                    },
+                    {
+                        enableHighAccuracy: true,
+                        timeout: 10000,
+                        maximumAge: 0
+                    }
+                );
+            } else {
+                // Obtém apenas uma posição
+                navigator.geolocation.getCurrentPosition(
+                    function(position) {
+                        const lat = position.coords.latitude;
+                        const lng = position.coords.longitude;
+                        updateCoordinates(lat, lng);
+                        initMap(lat, lng);
+                    },
+                    function(error) {
+                        handleGeolocationError(error);
+                    },
+                    {
+                        enableHighAccuracy: true,
+                        timeout: 10000,
+                        maximumAge: 0
+                    }
+                );
+            }
+        }
+        
+        // Trata erros de geolocalização
+        function handleGeolocationError(error) {
+            let errorMessage;
+            switch(error.code) {
+                case error.PERMISSION_DENIED:
+                    errorMessage = "Permissão de localização negada pelo usuário";
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    errorMessage = "Informações de localização indisponíveis";
+                    break;
+                case error.TIMEOUT:
+                    errorMessage = "Tempo limite para obter localização excedido";
+                    break;
+                case error.UNKNOWN_ERROR:
+                    errorMessage = "Ocorreu um erro desconhecido";
+                    break;
+            }
+            coordError.textContent = "Erro: " + errorMessage;
+        }
+        
+        // Permite inserir coordenadas manualmente
+        function manualCoords() {
+            const lat = prompt("Digite a latitude (ex: -15.788):");
+            const lng = prompt("Digite a longitude (ex: -47.879):");
+            
+            if (lat && lng && !isNaN(lat) && !isNaN(lng)) {
+                updateCoordinates(parseFloat(lat), parseFloat(lng));
+                initMap(parseFloat(lat), parseFloat(lng));
+            } else {
+                alert("Coordenadas inválidas. Por favor, insira valores numéricos.");
+            }
+        }
+        
+        // Adiciona um novo auto de infração
+        function addAuto() {
+            autoCount++;
+            const newAuto = document.createElement('div');
+            newAuto.className = 'auto-item';
+            newAuto.innerHTML = `
+                <div class="form-group">
+                    <label for="auto_numero_${autoCount}">Número do Auto de Infração:</label>
+                    <input type="text" id="auto_numero_${autoCount}" class="auto-numero" required>
+                </div>
+                <div class="form-group">
+                    <label for="auto_descricao_${autoCount}">Descrição da Infração:</label>
+                    <textarea id="auto_descricao_${autoCount}" class="auto-descricao" rows="3" required></textarea>
+                </div>
+                <button class="btn btn-secondary remove-auto no-print" data-id="${autoCount}">Remover Auto</button>
+            `;
+            document.getElementById('autos-container').appendChild(newAuto);
+            
+            // Adiciona evento para remover o auto
+            newAuto.querySelector('.remove-auto').addEventListener('click', function() {
+                if (autoCount > 1) {
+                    document.getElementById('autos-container').removeChild(newAuto);
+                    autoCount--;
+                } else {
+                    alert("Pelo menos um auto de infração deve ser mantido.");
+                }
+            });
+        }
+        
+        // Adiciona um novo termo
+        function addTermo() {
+            termoCount++;
+            const newTermo = document.createElement('div');
+            newTermo.className = 'termo-item';
+            newTermo.innerHTML = `
+                <div class="form-group">
+                    <label for="termo_tipo_${termoCount}">Tipo de Termo:</label>
+                    <select id="termo_tipo_${termoCount}" class="termo-tipo" required>
+                        <option value="">Selecione...</option>
+                        <option value="notificacao">Termo de Notificação</option>
+                        <option value="apreensao">Termo de Apreensão</option>
+                        <option value="embargo">Termo de Embargo</option>
+                        <option value="soltura">Termo de Soltura</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="termo_numero_${termoCount}">Número do Termo:</label>
+                    <input type="text" id="termo_numero_${termoCount}" class="termo-numero" required>
+                </div>
+                <button class="btn btn-secondary remove-termo no-print" data-id="${termoCount}">Remover Termo</button>
+            `;
+            document.getElementById('termos-container').appendChild(newTermo);
+            
+            // Adiciona evento para remover o termo
+            newTermo.querySelector('.remove-termo').addEventListener('click', function() {
+                if (termoCount > 1) {
+                    document.getElementById('termos-container').removeChild(newTermo);
+                    termoCount--;
+                } else {
+                    alert("Pelo menos um termo deve ser mantido.");
+                }
+            });
+        }
+        
+        // Adiciona uma foto ao relatório
+        function addPhoto(file, coords) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                photoCount++;
+                const photoContainer = document.getElementById('photo-container');
+                const template = photoContainer.querySelector('.photo-item');
+                const newPhoto = template.cloneNode(true);
+                
+                newPhoto.style.display = 'block';
+                newPhoto.querySelector('.photo-number').textContent = `Figura ${photoCount}`;
+                newPhoto.querySelector('.photo-preview').src = e.target.result;
+                newPhoto.querySelector('.photo-coords').value = 
+                    `${coords.lat.toFixed(6)}, ${coords.lng.toFixed(6)}`;
+                
+                newPhoto.querySelector('.remove-photo').addEventListener('click', function() {
+                    photoContainer.removeChild(newPhoto);
+                    currentPhotos = currentPhotos.filter(p => p.id !== newPhoto.dataset.id);
+                    updatePhotoNumbers();
+                });
+                
+                const photoId = 'photo-' + Date.now();
+                newPhoto.dataset.id = photoId;
+                photoContainer.appendChild(newPhoto);
+                
+                currentPhotos.push({
+                    id: photoId,
+                    file: file,
+                    coords: coords,
+                    element: newPhoto
+                });
+            };
+            reader.readAsDataURL(file);
+        }
+        
+        // Atualiza a numeração das fotos
+        function updatePhotoNumbers() {
+            const photos = document.querySelectorAll('.photo-item:not([style*="display: none"])');
+            photoCount = 0;
+            
+            photos.forEach((photo, index) => {
+                photoCount++;
+                photo.querySelector('.photo-number').textContent = `Figura ${photoCount}`;
+            });
+        }
+        
+        // Imprime o relatório
+        function printReport() {
+            window.print();
+        }
+        
+        // Gera PDF do relatório com controle de paginação
+        function generatePDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF('p', 'pt', 'a4');
+            const element = document.getElementById('relatorio');
+            const padding = 40;
+            const pageWidth = doc.internal.pageSize.getWidth() - padding * 2;
+            
+            // Primeiro criamos um canvas temporário para calcular a altura total
+            html2canvas(element, {
+                scale: 1,
+                logging: false,
+                useCORS: true
+            }).then(tempCanvas => {
+                const tempImgData = tempCanvas.toDataURL('image/png');
+                const tempImgWidth = pageWidth;
+                const tempImgHeight = (tempCanvas.height * tempImgWidth) / tempCanvas.width;
+                
+                // Calcula quantas páginas serão necessárias
+                const pageHeight = doc.internal.pageSize.getHeight() - padding;
+                const totalPages = Math.ceil(tempImgHeight / pageHeight);
+                
+                // Agora geramos o PDF com qualidade maior, controlando a paginação
+                html2canvas(element, {
+                    scale: 2, // Maior qualidade
+                    logging: false,
+                    useCORS: true
+                }).then(finalCanvas => {
+                    const imgData = finalCanvas.toDataURL('image/png');
+                    const imgWidth = pageWidth;
+                    const imgHeight = (finalCanvas.height * imgWidth) / finalCanvas.width;
+                    
+                    let position = padding;
+                    const imgHeightPerPage = pageHeight - padding;
+                    
+                    // Adiciona a primeira página com cabeçalho
+                    doc.setFontSize(18);
+                    doc.text('Relatório Fotográfico Ambiental', padding, padding - 20);
+                    
+                    // Adiciona a imagem em páginas segmentadas
+                    for (let i = 0; i < totalPages; i++) {
+                        if (i > 0) {
+                            doc.addPage();
+                        }
+                        
+                        const cropY = position - padding;
+                        const cropHeight = Math.min(imgHeightPerPage, imgHeight - cropY);
+                        
+                        doc.addImage(imgData, 'PNG', 
+                            padding, padding, 
+                            imgWidth, imgHeight,
+                            undefined, undefined, 0,
+                            cropY, imgWidth, cropHeight);
+                        
+                        position += imgHeightPerPage;
+                        
+                        // Adiciona rodapé com número de página
+                        doc.setFontSize(10);
+                        doc.text(`Página ${i + 1} de ${totalPages}`, 
+                            doc.internal.pageSize.getWidth() - padding - 50, 
+                            doc.internal.pageSize.getHeight() - 20);
+                    }
+                    
+                    doc.save('relatorio_ambiental.pdf');
+                });
+            });
+        }
+        
+        // Salva os dados no localStorage e IndexedDB
+        function saveData() {
+            const reportData = {
+                data: document.getElementById('data').value,
+                hora: document.getElementById('hora').value,
+                local: document.getElementById('local').value,
+                infrator_nome: document.getElementById('infrator_nome').value,
+                infrator_documento: document.getElementById('infrator_documento').value,
+                latitude: document.getElementById('latitude').value,
+                longitude: document.getElementById('longitude').value,
+                descricao: document.getElementById('descricao').value,
+                fiscal_nome: document.getElementById('fiscal_nome').value,
+                fiscal_matricula: document.getElementById('fiscal_matricula').value,
+                signature: signaturePad.isEmpty() ? null : signaturePad.toDataURL(),
+                autos: [],
+                termos: [],
+                photos: []
+            };
+            
+            // Coleta dados dos autos
+            document.querySelectorAll('.auto-item').forEach((auto, index) => {
+                const autoId = index + 1;
+                reportData.autos.push({
+                    numero: document.getElementById(`auto_numero_${autoId}`).value,
+                    descricao: document.getElementById(`auto_descricao_${autoId}`).value
+                });
+            });
+            
+            // Coleta dados dos termos
+            document.querySelectorAll('.termo-item').forEach((termo, index) => {
+                const termoId = index + 1;
+                reportData.termos.push({
+                    tipo: document.getElementById(`termo_tipo_${termoId}`).value,
+                    numero: document.getElementById(`termo_numero_${termoId}`).value
+                });
+            });
+            
+            // Coleta dados das fotos
+            document.querySelectorAll('.photo-item:not([style*="display: none"])').forEach(photo => {
+                reportData.photos.push({
+                    caption: photo.querySelector('.photo-caption').value,
+                    coords: photo.querySelector('.photo-coords').value,
+                    src: photo.querySelector('.photo-preview').src
+                });
+            });
+            
+            localStorage.setItem('ambientalReportData', JSON.stringify(reportData));
+            
+            if ('indexedDB' in window) {
+                const request = indexedDB.open('AmbientalReportsDB', 1);
+                
+                request.onupgradeneeded = function(event) {
+                    const db = event.target.result;
+                    if (!db.objectStoreNames.contains('reports')) {
+                        db.createObjectStore('reports', { keyPath: 'id' });
+                    }
+                    if (!db.objectStoreNames.contains('infratores')) {
+                        const store = db.createObjectStore('infratores', { keyPath: 'documento' });
+                        store.createIndex('nome', 'nome', { unique: false });
+                    }
+                };
+                
+                request.onsuccess = function(event) {
+                    const db = event.target.result;
+                    const transaction = db.transaction(['reports', 'infratores'], 'readwrite');
+                    const reportStore = transaction.objectStore('reports');
+                    const infratorStore = transaction.objectStore('infratores');
+                    
+                    // Salva o relatório
+                    const reportToSave = {
+                        id: Date.now(),
+                        data: reportData,
+                        createdAt: new Date()
+                    };
+                    
+                    reportStore.put(reportToSave);
+                    
+                    // Atualiza/insere o infrator no banco de dados
+                    const infrator = {
+                        nome: reportData.infrator_nome,
+                        documento: reportData.infrator_documento,
+                        autos: reportData.autos.map(auto => auto.numero),
+                        updatedAt: new Date()
+                    };
+                    
+                    infratorStore.put(infrator);
+                    
+                    alert('Dados salvos com sucesso no banco de dados offline!');
+                };
+                
+                request.onerror = function(event) {
+                    console.error('IndexedDB error:', event.target.error);
+                    alert('Dados salvos apenas no localStorage. Erro ao acessar IndexedDB.');
+                };
+            } else {
+                alert('Dados salvos com sucesso no localStorage!');
+            }
+        }
+        
+        // Carrega os dados do localStorage ou IndexedDB
+        function loadData() {
+            const savedData = localStorage.getItem('ambientalReportData');
+            if (savedData) {
+                loadDataFromStorage(savedData);
+                return;
+            }
+            
+            if ('indexedDB' in window) {
+                const request = indexedDB.open('AmbientalReportsDB', 1);
+                
+                request.onsuccess = function(event) {
+                    const db = event.target.result;
+                    const transaction = db.transaction(['reports'], 'readonly');
+                    const store = transaction.objectStore('reports');
+                    const getAllRequest = store.getAll();
+                    
+                    getAllRequest.onsuccess = function() {
+                        if (getAllRequest.result.length > 0) {
+                            const reports = getAllRequest.result;
+                            reports.sort((a, b) => b.createdAt - a.createdAt);
+                            loadDataFromStorage(JSON.stringify(reports[0].data));
+                        } else {
+                            alert('Nenhum dado salvo encontrado.');
+                        }
+                    };
+                    
+                    getAllRequest.onerror = function() {
+                        alert('Erro ao carregar dados do banco de dados offline.');
+                    };
+                };
+                
+                request.onerror = function(event) {
+                    console.error('IndexedDB error:', event.target.error);
+                    alert('Nenhum dado salvo encontrado.');
+                };
+            } else {
+                alert('Nenhum dado salvo encontrado.');
+            }
+        }
+        
+        function loadDataFromStorage(savedData) {
+            const reportData = JSON.parse(savedData);
+            
+            // Limpa os containers antes de carregar novos dados
+            document.getElementById('autos-container').innerHTML = '';
+            document.getElementById('termos-container').innerHTML = '';
+            document.getElementById('photo-container').innerHTML = '';
+            
+            // Define os contadores para zero
+            autoCount = 0;
+            termoCount = 0;
+            photoCount = 0;
+            
+            // Carrega dados básicos
+            document.getElementById('data').value = reportData.data || '';
+            document.getElementById('hora').value = reportData.hora || '';
+            document.getElementById('local').value = reportData.local || '';
+            document.getElementById('infrator_nome').value = reportData.infrator_nome || '';
+            document.getElementById('infrator_documento').value = reportData.infrator_documento || '';
+            document.getElementById('latitude').value = reportData.latitude || '';
+            document.getElementById('longitude').value = reportData.longitude || '';
+            document.getElementById('descricao').value = reportData.descricao || '';
+            document.getElementById('fiscal_nome').value = reportData.fiscal_nome || '';
+            document.getElementById('fiscal_matricula').value = reportData.fiscal_matricula || '';
+            
+            if (reportData.signature) {
+                signaturePad.fromDataURL(reportData.signature);
+            }
+            
+            if (reportData.latitude && reportData.longitude) {
+                updateDMSCoordinates(
+                    parseFloat(reportData.latitude),
+                    parseFloat(reportData.longitude)
+                );
+                
+                initMap(
+                    parseFloat(reportData.latitude),
+                    parseFloat(reportData.longitude)
+                );
+            }
+            
+            // Carrega autos de infração
+            if (reportData.autos && reportData.autos.length > 0) {
+                reportData.autos.forEach((auto, index) => {
+                    if (index === 0) {
+                        // Usa o primeiro auto que já existe
+                        document.getElementById('auto_numero_1').value = auto.numero || '';
+                        document.getElementById('auto_descricao_1').value = auto.descricao || '';
+                        autoCount = 1;
+                    } else {
+                        // Adiciona novos autos para os demais
+                        addAuto();
+                        const autoId = index + 1;
+                        document.getElementById(`auto_numero_${autoId}`).value = auto.numero || '';
+                        document.getElementById(`auto_descricao_${autoId}`).value = auto.descricao || '';
+                    }
+                });
+            }
+            
+            // Carrega termos
+            if (reportData.termos && reportData.termos.length > 0) {
+                reportData.termos.forEach((termo, index) => {
+                    if (index === 0) {
+                        // Usa o primeiro termo que já existe
+                        document.getElementById('termo_tipo_1').value = termo.tipo || '';
+                        document.getElementById('termo_numero_1').value = termo.numero || '';
+                        termoCount = 1;
+                    } else {
+                        // Adiciona novos termos para os demais
+                        addTermo();
+                        const termoId = index + 1;
+                        document.getElementById(`termo_tipo_${termoId}`).value = termo.tipo || '';
+                        document.getElementById(`termo_numero_${termoId}`).value = termo.numero || '';
+                    }
+                });
+            }
+            
+            // Carrega fotos (se existirem URLs salvas)
+            if (reportData.photos && reportData.photos.length > 0) {
+                reportData.photos.forEach(photo => {
+                    if (photo.src) {
+                        // Simula um objeto File para carregar a foto
+                        const fakeFile = {
+                            name: 'foto_carregada.png',
+                            type: 'image/png'
+                        };
+                        
+                        // Cria um objeto de coordenadas
+                        const coords = {
+                            lat: parseFloat(photo.coords.split(',')[0]),
+                            lng: parseFloat(photo.coords.split(',')[1])
+                        };
+                        
+                        // Cria um elemento de foto manualmente
+                        photoCount++;
+                        const photoContainer = document.getElementById('photo-container');
+                        const template = photoContainer.querySelector('.photo-item');
+                        const newPhoto = template.cloneNode(true);
+                        
+                        newPhoto.style.display = 'block';
+                        newPhoto.querySelector('.photo-number').textContent = `Figura ${photoCount}`;
+                        newPhoto.querySelector('.photo-preview').src = photo.src;
+                        newPhoto.querySelector('.photo-caption').value = photo.caption || '';
+                        newPhoto.querySelector('.photo-coords').value = photo.coords || '';
+                        
+                        newPhoto.querySelector('.remove-photo').addEventListener('click', function() {
+                            photoContainer.removeChild(newPhoto);
+                            currentPhotos = currentPhotos.filter(p => p.id !== newPhoto.dataset.id);
+                            updatePhotoNumbers();
+                        });
+                        
+                        const photoId = 'photo-loaded-' + Date.now();
+                        newPhoto.dataset.id = photoId;
+                        photoContainer.appendChild(newPhoto);
+                        
+                        currentPhotos.push({
+                            id: photoId,
+                            file: fakeFile,
+                            coords: coords,
+                            element: newPhoto
+                        });
+                    }
+                });
+            }
+            
+            alert('Dados carregados com sucesso!');
+        }
+
+        // Event Listeners
+        document.getElementById('get-location').addEventListener('click', getLocation);
+        document.getElementById('manual-coords').addEventListener('click', manualCoords);
+        document.getElementById('print-report').addEventListener('click', printReport);
+        document.getElementById('generate-pdf').addEventListener('click', generatePDF);
+        document.getElementById('save-data').addEventListener('click', saveData);
+        document.getElementById('load-data').addEventListener('click', loadData);
+        document.getElementById('add-auto').addEventListener('click', addAuto);
+        document.getElementById('add-termo').addEventListener('click', addTermo);
+        document.getElementById('clear-signature').addEventListener('click', function() {
+            signaturePad.clear();
+        });
+        
+        document.getElementById('photo-upload').addEventListener('change', function(e) {
+            const files = e.target.files;
+            const lat = parseFloat(document.getElementById('latitude').value);
+            const lng = parseFloat(document.getElementById('longitude').value);
+            
+            if (isNaN(lat) || isNaN(lng)) {
+                alert("Por favor, defina as coordenadas antes de adicionar fotos.");
+                return;
+            }
+            
+            for (let i = 0; i < files.length; i++) {
+                addPhoto(files[i], { lat, lng });
+            }
+            
+            e.target.value = '';
+        });
+        
+        // Monitora mudanças na conexão
+        window.addEventListener('online', updateConnectionStatus);
+        window.addEventListener('offline', updateConnectionStatus);
+        
+        // Atualiza o QR Code quando os dados mudam
+        document.getElementById('auto_numero_1').addEventListener('change', generateQRCode);
+    </script>
+</body>
+</html>
