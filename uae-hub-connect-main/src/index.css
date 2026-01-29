@@ -1,0 +1,347 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* OneHubDeliOps Design System - UAE Logistics Revolution */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Orbitron:wght@400;500;600;700;800;900&display=swap');
+
+@layer base {
+  :root {
+    /* Core Palette - Dubai Night Sky */
+    --background: 220 40% 4%;
+    --foreground: 210 40% 96%;
+
+    /* Card & Panels - Glassmorphism Base */
+    --card: 220 35% 8%;
+    --card-foreground: 210 40% 96%;
+
+    --popover: 220 35% 10%;
+    --popover-foreground: 210 40% 96%;
+
+    /* Primary - Royal Gold (UAE Luxury) */
+    --primary: 43 50% 58%;
+    --primary-foreground: 220 40% 4%;
+
+    /* Secondary - Deep Navy */
+    --secondary: 220 45% 15%;
+    --secondary-foreground: 210 40% 96%;
+
+    /* Muted - Subtle Depths */
+    --muted: 220 30% 12%;
+    --muted-foreground: 215 20% 55%;
+
+    /* Accent - Cyber Teal */
+    --accent: 185 100% 50%;
+    --accent-foreground: 220 40% 4%;
+
+    /* Destructive - Alert Red */
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 210 40% 98%;
+
+    /* Success - Emirates Green */
+    --success: 142 71% 45%;
+    --success-foreground: 220 40% 4%;
+
+    /* Warning - Amber Alert */
+    --warning: 38 92% 50%;
+    --warning-foreground: 220 40% 4%;
+
+    /* Info - Sky Blue */
+    --info: 199 89% 48%;
+    --info-foreground: 220 40% 4%;
+
+    /* Borders & Inputs */
+    --border: 220 30% 18%;
+    --input: 220 30% 15%;
+    --ring: 43 50% 58%;
+
+    --radius: 0.75rem;
+
+    /* Custom Brand Colors */
+    --gold: 43 50% 58%;
+    --gold-glow: 43 70% 65%;
+    --cyan: 185 100% 50%;
+    --cyan-glow: 185 100% 60%;
+    --midnight: 220 40% 4%;
+    --deep-blue: 220 45% 12%;
+    --steel: 220 20% 25%;
+
+    /* Gradients */
+    --gradient-gold: linear-gradient(135deg, hsl(43 50% 58%), hsl(35 60% 45%));
+    --gradient-cyan: linear-gradient(135deg, hsl(185 100% 50%), hsl(200 100% 40%));
+    --gradient-dark: linear-gradient(180deg, hsl(220 40% 6%), hsl(220 40% 2%));
+    --gradient-card: linear-gradient(145deg, hsl(220 35% 10% / 0.8), hsl(220 35% 6% / 0.6));
+    --gradient-glow: radial-gradient(ellipse at 50% 0%, hsl(185 100% 50% / 0.15), transparent 70%);
+
+    /* Shadows */
+    --shadow-glow-gold: 0 0 40px hsl(43 50% 58% / 0.3);
+    --shadow-glow-cyan: 0 0 40px hsl(185 100% 50% / 0.3);
+    --shadow-card: 0 8px 32px hsl(220 40% 2% / 0.5);
+    --shadow-elevated: 0 20px 60px hsl(220 40% 2% / 0.7);
+
+    /* Sidebar */
+    --sidebar-background: 220 40% 6%;
+    --sidebar-foreground: 210 40% 90%;
+    --sidebar-primary: 43 50% 58%;
+    --sidebar-primary-foreground: 220 40% 4%;
+    --sidebar-accent: 220 35% 12%;
+    --sidebar-accent-foreground: 210 40% 96%;
+    --sidebar-border: 220 30% 15%;
+    --sidebar-ring: 43 50% 58%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: 'Inter', system-ui, sans-serif;
+    background: linear-gradient(180deg, hsl(220 40% 4%), hsl(220 45% 2%));
+    min-height: 100vh;
+  }
+
+  /* Custom Scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: hsl(var(--muted));
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: hsl(var(--steel));
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--primary));
+  }
+}
+
+@layer components {
+  /* Glassmorphism Cards */
+  .glass-card {
+    @apply rounded-xl border border-border/50;
+    background: linear-gradient(145deg, hsl(220 35% 10% / 0.8), hsl(220 35% 6% / 0.6));
+    backdrop-filter: blur(20px);
+    box-shadow: 0 8px 32px hsl(220 40% 2% / 0.5);
+  }
+
+  .glass-card-hover {
+    @apply glass-card transition-all duration-300;
+  }
+
+  .glass-card-hover:hover {
+    border-color: hsl(var(--primary) / 0.5);
+    box-shadow: 0 8px 32px hsl(43 50% 58% / 0.15);
+    transform: translateY(-2px);
+  }
+
+  /* Glow Effects */
+  .glow-gold {
+    box-shadow: 0 0 40px hsl(43 50% 58% / 0.3);
+  }
+
+  .glow-cyan {
+    box-shadow: 0 0 40px hsl(185 100% 50% / 0.3);
+  }
+
+  .glow-text-gold {
+    text-shadow: 0 0 30px hsl(43 50% 58% / 0.5);
+  }
+
+  .glow-text-cyan {
+    text-shadow: 0 0 30px hsl(185 100% 50% / 0.5);
+  }
+
+  /* Gradient Text */
+  .text-gradient-gold {
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(135deg, hsl(43 50% 58%), hsl(35 70% 50%));
+  }
+
+  .text-gradient-cyan {
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(135deg, hsl(185 100% 50%), hsl(200 100% 60%));
+  }
+
+  /* Animated Background Grid */
+  .grid-pattern {
+    background-image: 
+      linear-gradient(hsl(220 30% 15% / 0.3) 1px, transparent 1px),
+      linear-gradient(90deg, hsl(220 30% 15% / 0.3) 1px, transparent 1px);
+    background-size: 60px 60px;
+    animation: gridMove 20s linear infinite;
+  }
+
+  /* Pulse Ring Animation */
+  .pulse-ring {
+    @apply absolute rounded-full;
+    animation: pulseRing 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  /* Data Stream Animation */
+  .data-stream {
+    @apply relative overflow-hidden;
+  }
+
+  .data-stream::after {
+    content: '';
+    @apply absolute inset-0;
+    background: linear-gradient(90deg, transparent, hsl(185 100% 50% / 0.1), transparent);
+    animation: dataStream 3s linear infinite;
+  }
+
+  /* Status Indicators */
+  .status-online {
+    @apply w-2 h-2 rounded-full bg-success;
+    box-shadow: 0 0 8px hsl(var(--success));
+    animation: pulse 2s infinite;
+  }
+
+  .status-warning {
+    @apply w-2 h-2 rounded-full bg-warning;
+    box-shadow: 0 0 8px hsl(var(--warning));
+  }
+
+  .status-offline {
+    @apply w-2 h-2 rounded-full bg-destructive;
+    box-shadow: 0 0 8px hsl(var(--destructive));
+  }
+
+  /* Orbitron Display Font */
+  .font-display {
+    font-family: 'Orbitron', monospace;
+  }
+
+  /* Metric Cards */
+  .metric-card {
+    @apply glass-card p-6 relative overflow-hidden;
+  }
+
+  .metric-card::before {
+    content: '';
+    @apply absolute top-0 left-0 right-0 h-1;
+    background: linear-gradient(90deg, transparent, hsl(var(--primary)), transparent);
+  }
+
+  /* Navigation Item */
+  .nav-item {
+    @apply flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 text-muted-foreground hover:text-foreground hover:bg-secondary/50;
+  }
+
+  .nav-item.active {
+    @apply bg-primary/10 text-primary border-l-2 border-primary;
+  }
+
+  /* Interactive Map Marker */
+  .map-marker {
+    @apply absolute w-3 h-3 rounded-full;
+    animation: markerPulse 2s infinite;
+  }
+
+  /* KPI Badge */
+  .kpi-badge {
+    @apply inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium;
+  }
+
+  .kpi-badge.positive {
+    @apply bg-success/20 text-success;
+  }
+
+  .kpi-badge.negative {
+    @apply bg-destructive/20 text-destructive;
+  }
+
+  /* Holographic Border */
+  .holo-border {
+    @apply relative;
+  }
+
+  .holo-border::before {
+    content: '';
+    @apply absolute -inset-[1px] rounded-xl opacity-50;
+    background: linear-gradient(135deg, hsl(43 50% 58%), hsl(185 100% 50%), hsl(43 50% 58%));
+    z-index: -1;
+    animation: holoBorder 4s linear infinite;
+  }
+}
+
+@layer utilities {
+  /* Animation Delays */
+  .animation-delay-100 { animation-delay: 100ms; }
+  .animation-delay-200 { animation-delay: 200ms; }
+  .animation-delay-300 { animation-delay: 300ms; }
+  .animation-delay-500 { animation-delay: 500ms; }
+  .animation-delay-700 { animation-delay: 700ms; }
+  .animation-delay-1000 { animation-delay: 1000ms; }
+}
+
+/* Keyframes */
+@keyframes gridMove {
+  0% { background-position: 0 0; }
+  100% { background-position: 60px 60px; }
+}
+
+@keyframes pulseRing {
+  0% { transform: scale(0.8); opacity: 0.5; }
+  50% { transform: scale(1.2); opacity: 0.2; }
+  100% { transform: scale(0.8); opacity: 0.5; }
+}
+
+@keyframes dataStream {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+@keyframes markerPulse {
+  0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 currentColor; }
+  50% { transform: scale(1.2); box-shadow: 0 0 0 10px transparent; }
+}
+
+@keyframes holoBorder {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes orbitSlow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
+}
